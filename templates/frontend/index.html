@@ -1,0 +1,203 @@
+{% load static %}
+<html>
+<head>
+    <link href='{% static "fonts/modernh/modernh.css" %}' rel='stylesheet' type='text/css'>
+    <link href='{% static "css/foundation-4/css/foundation.min.css" %}' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Poiret+One&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+<style>
+@import url(http://fonts.googleapis.com/css?family=Lato:100);
+body {
+    padding-top: 50px;
+    background-color: #525d71;
+    /* background-color: #2c3e50; <- тут что-то интересное*/
+    color:#ecf5fa;
+}
+div#calendar div.logo h1 {
+    color:#ecf5fa;
+    font-family: 'Poiret One';
+    font-weight: 400;
+    font-size: 17px;
+}
+div#calendar div.data {
+    font-family: 'Poiret One';
+
+    text-align: center;
+}
+div#calendar ul li{
+    float: left;
+    height: 50px;
+    padding-top: 15px;
+    padding-left:8px;
+    padding-right:8px;
+    background-image: url({% static 'img/menu.jpg' %});
+    background-repeat: no-repeat;
+}
+div#calendar ul li.first{
+    padding-left:0px;
+}
+div#calendar ul li.last{
+    padding-right:0px;
+}
+
+div#calendar ul li.active {
+    background-image: url({% static 'img/menu.jpg' %});
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+div#calendar ul li.active a {
+    color:#ff6666;
+}
+div#calendar ul li a
+{
+    font-family: 'Lato';
+    color:#ecf5fa;
+}
+
+
+div#moon_img {
+    position: relative;
+}
+div#moon_day {
+    position: absolute;
+    top:200;
+    margin-left: -60px;
+    margin-top: -60px;
+    left: 50%;
+    text-align: center;
+
+}
+div#moon_day div.day {
+    color:#ecf5fa;
+    font-size: 90px;
+    font-family: 'Lato';
+    font-weight: 100;
+    font-style: normal;
+    float: left;
+    width: 100px;
+}
+div#moon_day div.info {
+    font-size: 15px;
+    color:#ecf5fa;
+    font-family: 'Poiret One';
+    font-weight: 400;
+    font-style: normal;
+    text-align: left;
+    margin-left: 110px;
+    margin-top: 15px;
+}
+div.before, div.after {
+    color:#ecf5fa;
+    padding-top: 180px;
+    font-size: 14px;
+    font-family: 'Poiret One';
+}
+div.before hr,div.after hr {
+    color: #ecf5fa; /*для IE */
+    background-color:#ecf5fa; /*для Firefox, Opera, Safari*/
+    border:0px none;
+    height:1px; /* высота 1px IE, Firefox, Opera, Safari */
+    clear:both; /* для очистки, если тег идет после float елемента */
+
+}
+</style>
+</head>
+<body onLoad="test()">
+<div class='row' id='calendar'>
+
+    <div class='small-3 large-3 columns logo'>
+        <img width='50px' src='{% static 'img/logo.png' %}' align='left'>
+        <a href='/'><h1>Лунный<br/> календарь</h1></a>
+    </div>
+    <div class='push-1 small-4 large-4  columns'>
+        <div class='data'>
+            16 марта 2013
+        </div>
+        <ul>
+            <li class='first'><a href=''>&larr;</a></li>
+            <li><a href=''>13</a></li>
+            <li><a href=''>14</a></li>
+            <li><a href=''>15</a></li>
+            <li class='active'><a href=''>16</a></li>
+            <li><a href=''>17</a></li>
+            <li><a href=''>18</a></li>
+            <li><a href=''>19</a></li>
+            <li class='last'><a href=''>&rarr;</a></li>
+        </ul>
+    </div>
+    <div class='small-4 large-4 columns'>
+
+    </div>
+</div>
+<div id='moon_img' class='row'>
+    <div class='small-1 large-1 columns'>
+        <canvas id='first_moon' width="50" height="400"></canvas>
+    </div>
+    <div class='small-3 large-3 columns before'>
+        <hr/>
+        <span>12 дней<br/>после полнолуния</span>
+    </div>
+    <div class='small-4 large-4 columns'>
+        <canvas id='moon' width="300" height="400"></canvas>
+        <div id='moon_day'>
+            <div class='day'>15</div>
+            <div class='info'>лунный<br/> день</div>
+        </div>
+    </div>
+    <div class='small-3 large-3 columns after'>
+        <hr/>
+        <span>5 дней<br/>до новолуния</span>
+    </div>
+    <div class='small-1 large-1 columns'>
+        <canvas id='next_moon' width="50" height="400"></canvas>
+    </div>
+</div>
+</body>
+</html>
+<script>
+function test()
+{
+    var canvas = document.getElementById('moon');
+    var ctx = canvas.getContext('2d');
+    var centerX = 150,
+        centerY = 200,
+        radius = 130,
+        startingAngle = -0.1 * Math.PI,
+        endingAngle = 0.1 * Math.PI,
+        counterclockwise = false,
+        width=5;
+
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, -1 * Math.PI, 1 * Math.PI, counterclockwise);
+    ctx.lineWidth = width;
+    ctx.strokeStyle = "#2c3e50";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, startingAngle, endingAngle, counterclockwise);
+
+    ctx.lineWidth = width;
+    ctx.strokeStyle = "#ff6666";
+    ctx.stroke();
+
+    var canvas = document.getElementById('first_moon');
+    var ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(25, 200, 20, 0, 2*Math.PI, false);
+    ctx.fillStyle = '#2c3e50';
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#ff6666';
+    ctx.stroke();
+
+    var canvas = document.getElementById('next_moon');
+    var ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(25, 200, 20, 0, 2*Math.PI, false);
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#2c3e50';
+    ctx.stroke();
+}
+</script>
+
